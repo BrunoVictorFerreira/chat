@@ -14,3 +14,16 @@ app.use("/", (req, res) => {
     res.render("index.html");
 })
 
+var messages = []
+
+io.on("connection", socket => {
+    console.log("socket conectado " + socket.id)
+
+    socket.emit("previousMessages", messages)
+
+    socket.on("sendMessage", data => {
+        console.log(data)
+        messages.push(data);
+        socket.broadcast.emit("receivedMessage", data);
+    })
+})
